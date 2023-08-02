@@ -1,9 +1,46 @@
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+
 public class Arrays {
 
     public static void main(String[] args) {
-        int maxProfit = maxProfit(new int[]{1, 2, 3, 4, 5});
-        System.out.println(maxProfit);
+        int[] nums1 = new int[]{4,9,5};
+        int[] nums2 = new int[]{9,4,9,8,4};
+        System.out.println(java.util.Arrays.toString(intersect(nums1, nums2)));
     }
+
+    public static int[] intersect(int[] nums1, int[] nums2) {
+        ArrayList<Integer> result = new ArrayList<>();
+        HashMap<Integer, Integer> map = new HashMap<>();
+        int [] longArr ;
+        int [] smallArr;
+        if (nums1.length>nums2.length){
+            longArr = nums1;
+            smallArr = nums2;
+        }else{
+            longArr = nums2;
+            smallArr = nums1;
+        }
+
+        for (int num : longArr) {
+            map.merge(num, 1, Integer::sum);
+        }
+
+        for (int secNum : smallArr) {
+            if (map.get(secNum) != null) {
+                if (map.get(secNum) == 1) {
+                    result.add(secNum);
+                    map.remove(secNum);
+                } else {
+                    map.put(secNum, map.get(secNum) - 1);
+                    result.add(secNum);
+                }
+            }
+        }
+        return result.stream().mapToInt(Integer::intValue).toArray();
+    }
+
     public static int maxProfit(int[] arr) {
         int lastConsidered = arr[0]; // 3
         int totalProfit = 0;
@@ -29,8 +66,16 @@ public class Arrays {
         }
 
         // Copy the rotated elements back to the original array
-        for (int i = 0; i < n; i++) {
-            arr[i] = tempArr[i];
+        System.arraycopy(tempArr, 0, arr, 0, n);
+    }
+
+    public static boolean containsDuplicate(int[] nums) {
+        HashSet<Integer> map = new HashSet<>();
+        for (int curr : nums) {
+            if (map.contains(curr))
+                return true;
+            map.add(curr);
         }
+        return false;
     }
 }
